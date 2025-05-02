@@ -30,7 +30,7 @@
       margin: 6px 0;
     }
     .dynamic-inner {
-      width: 300px; /* adjust as needed to match phrase/note width */
+      width: 300px;
       display: flex;
       justify-content: space-between;
       margin: 0 auto;
@@ -66,18 +66,24 @@
 
       <div class="note-columns">
         <div class="note-column">
-          <img id="accent" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
-          <img id="articulation" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
-          <img id="notehead" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+          <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
+          <img src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+          <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
-          <!-- Placeholder for future Note 2 -->
+          <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
+          <img src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+          <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
-          <!-- Placeholder for future Note 3 -->
+          <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
+          <img src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+          <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
-          <!-- Placeholder for future Note 4 -->
+          <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
+          <img src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+          <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
       </div>
 
@@ -114,7 +120,7 @@
 
   <script>
     document.getElementById('articulationSelect').addEventListener('change', (e) => {
-      document.getElementById('articulation').src = e.target.value;
+      document.querySelectorAll('img[alt="Articulation"]').forEach(img => img.src = e.target.value);
     });
     document.getElementById('dynamicStartSelect').addEventListener('change', (e) => {
       document.getElementById('dynStart').src = e.target.value;
