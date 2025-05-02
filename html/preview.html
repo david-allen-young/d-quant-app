@@ -15,44 +15,61 @@
       background: white;
       padding: 20px;
       border: 1px solid #ccc;
-      width: max-content;
+      width: 800px; /* fixed width for 4 columns */
     }
-    .symbol-layer {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      margin: 2px 0;
-    }
+    .phrase-layer,
     .dynamic-row {
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
       align-items: center;
-      margin-top: 10px;
+      margin: 6px 0;
     }
-    .dynamic-row img {
-      margin: 0 5px;
+    .note-columns {
+      display: flex;
+      justify-content: space-between;
+    }
+    .note-column {
+      width: 25%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .note-column img {
+      margin: 2px 0;
     }
     select {
       margin-top: 1rem;
       font-size: 1rem;
+    }
+    .dynamic-row img {
+      margin: 0 5px;
     }
   </style>
 </head>
 <body>
   <div>
     <div class="preview-container" id="preview">
-      <div class="symbol-layer">
-        <img id="phrase" src="../images/Element_PhraseMark[1]_Legato.png" alt="Phrase" />
+      <div class="phrase-layer">
+        <img id="phrase" src="../images/Element_PhraseMark[1]_Legato.png" alt="Phrase" style="width: 100%;" />
       </div>
-      <div class="symbol-layer">
-        <img id="accent" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
+
+      <div class="note-columns">
+        <div class="note-column">
+          <img id="accent" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
+          <img id="articulation" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+          <img id="notehead" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+        </div>
+        <div class="note-column">
+          <!-- Placeholder for future Note 2 -->
+        </div>
+        <div class="note-column">
+          <!-- Placeholder for future Note 3 -->
+        </div>
+        <div class="note-column">
+          <!-- Placeholder for future Note 4 -->
+        </div>
       </div>
-      <div class="symbol-layer">
-        <img id="articulation" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
-      </div>
-      <div class="symbol-layer">
-        <img id="notehead" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
-      </div>
+
       <div class="dynamic-row">
         <img id="dynStart" src="../images/Element_DynMark[1]_pp.png" alt="pp" />
         <img id="hairpin" src="../images/Element_HairpinLong[0]_Crescendo.png" alt="Hairpin" />
@@ -71,13 +88,13 @@
       <label for="dynamicStartSelect">Start Dynamic:</label>
       <select id="dynamicStartSelect">
         <option value="../images/Element_DynMark[1]_pp.png">pp</option>
-        <option value="../images/Element_DynMark[4]_mf.png">mf (corrected)</option>
+        <option value="../images/Element_DynMark[4]_mf.png">mf</option>
       </select>
 
       <label for="dynamicEndSelect">End Dynamic:</label>
       <select id="dynamicEndSelect">
         <option value="../images/Element_DynMark[6]_ff.png">ff</option>
-        <option value="../images/Element_DynMark[5]_f.png">f (corrected)</option>
+        <option value="../images/Element_DynMark[5]_f.png">f</option>
       </select>
     </div>
   </div>
