@@ -17,12 +17,7 @@
       border: 1px solid #ccc;
       width: 300px;
     }
-    .phrase-layer {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 6px 0;
-    }
+    .phrase-layer,
     .dynamic-row {
       display: flex;
       justify-content: center;
@@ -69,24 +64,24 @@
 
       <div class="note-columns">
         <div class="note-column">
-          <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
-          <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
-          <img class="notehead-img" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+          <img class="accent-img" />
+          <img class="articulation-img" />
+          <img class="notehead-img" />
         </div>
         <div class="note-column">
-          <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
-          <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
-          <img class="notehead-img" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+          <img class="accent-img" />
+          <img class="articulation-img" />
+          <img class="notehead-img" />
         </div>
         <div class="note-column">
-          <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
-          <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
-          <img class="notehead-img" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+          <img class="accent-img" />
+          <img class="articulation-img" />
+          <img class="notehead-img" />
         </div>
         <div class="note-column">
-          <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
-          <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
-          <img class="notehead-img" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+          <img class="accent-img" />
+          <img class="articulation-img" />
+          <img class="notehead-img" />
         </div>
       </div>
 
@@ -165,107 +160,94 @@
       4: "../images/Element_NoteheadActive[0]_Eighth.png"
     };
 
+    const noteStates = [
+      { accent: 1, articulation: 1, notehead: 2, visible: true },
+      { accent: 1, articulation: 1, notehead: 2, visible: true },
+      { accent: 1, articulation: 1, notehead: 2, visible: true },
+      { accent: 1, articulation: 1, notehead: 2, visible: true }
+    ];
+
+    function updateNoteVisibility() {
+      const noteCount = parseInt(document.getElementById('noteCountSelect').value);
+      const showIndexes = noteCount === 1 ? [0] : noteCount === 2 ? [0, 2] : [0, 1, 2, 3];
+      noteStates.forEach((n, i) => n.visible = showIndexes.includes(i));
+      applyNoteStates();
+    }
+
+    function applyNoteStates() {
+      document.querySelectorAll('.note-column').forEach((col, i) => {
+        const state = noteStates[i];
+        const [accentImg, articulationImg, noteheadImg] = col.querySelectorAll('img');
+
+        // Notehead
+        noteheadImg.src = noteheadMap[state.notehead];
+        noteheadImg.classList.toggle('hidden-icon', !state.visible);
+
+        // Accent
+        if (state.accent === 1) accentImg.src = "../images/Element_AccentActive[1]_Standard.png";
+        else if (state.accent === 2) accentImg.src = "../images/Element_AccentActive[2]_Strong.png";
+        accentImg.classList.toggle('hidden-icon', state.accent === 0 || !state.visible);
+
+        // Articulation
+        if (state.articulation === 1) articulationImg.src = "../images/Element_ArticulationActive[1]_Staccato.png";
+        else if (state.articulation === 2) articulationImg.src = "../images/Element_ArticulationActive[2]_Tenuto.png";
+        articulationImg.classList.toggle('hidden-icon', state.articulation === 0 || !state.visible);
+      });
+    }
+
+    function updateAccent() {
+      const val = document.getElementById('accentSelect').value;
+      const code = val === 'standard' ? 1 : val === 'strong' ? 2 : 0;
+      noteStates.forEach(n => n.accent = code);
+      applyNoteStates();
+    }
+
+    function updateArticulation() {
+      const val = document.getElementById('articulationSelect').value;
+      const code = val === 'staccato' ? 1 : val === 'tenuto' ? 2 : 0;
+      noteStates.forEach(n => n.articulation = code);
+      document.getElementById('phrase').classList.toggle('hidden-icon', val !== 'legato');
+      applyNoteStates();
+    }
+
+    function updateNoteheadTypes() {
+      const count = parseInt(document.getElementById('noteCountSelect').value);
+      const type = count === 1 ? 1 : count === 2 ? 2 : 4;
+      noteStates.forEach(n => n.notehead = type);
+      updateNoteVisibility();
+    }
+
     function updateDynamics() {
       const startVal = parseInt(document.getElementById('dynamicStartSelect').value);
       const endVal = parseInt(document.getElementById('dynamicEndSelect').value);
-
       const dynStart = document.getElementById('dynStart');
       const dynEnd = document.getElementById('dynEnd');
       const hairpin = document.getElementById('hairpin');
 
       dynStart.src = dynImages[startVal];
-      dynStart.classList.remove('hidden-icon');
-      dynEnd.classList.remove('hidden-icon');
+      dynEnd.src = dynImages[endVal];
       hairpin.classList.remove('hidden-icon');
+      dynEnd.classList.remove('hidden-icon');
 
       if (startVal === endVal) {
-        dynEnd.classList.add('hidden-icon');
         hairpin.classList.add('hidden-icon');
-      } else if (startVal < endVal) {
-        dynEnd.src = dynImages[endVal];
-        hairpin.src = hairpins.crescendo;
+        dynEnd.classList.add('hidden-icon');
       } else {
-        dynEnd.src = dynImages[endVal];
-        hairpin.src = hairpins.diminuendo;
+        hairpin.src = startVal < endVal ? hairpins.crescendo : hairpins.diminuendo;
       }
     }
 
-    function updateArticulation() {
-      const selection = document.getElementById('articulationSelect').value;
-      const articulationImages = document.querySelectorAll('.articulation-img');
-      const phrase = document.getElementById('phrase');
-
-      phrase.classList.add('hidden-icon');
-      articulationImages.forEach(img => img.classList.remove('hidden-icon'));
-
-      if (selection === 'staccato') {
-        articulationImages.forEach(img => img.src = "../images/Element_ArticulationActive[1]_Staccato.png");
-      } else if (selection === 'tenuto') {
-        articulationImages.forEach(img => img.src = "../images/Element_ArticulationActive[2]_Tenuto.png");
-      } else if (selection === 'legato') {
-        articulationImages.forEach(img => img.classList.add('hidden-icon'));
-        phrase.classList.remove('hidden-icon');
-      } else {
-        articulationImages.forEach(img => img.classList.add('hidden-icon'));
-      }
-
-      updateNoteheads();
-    }
-
-    function updateAccent() {
-      const selection = document.getElementById('accentSelect').value;
-      const accentImages = document.querySelectorAll('.accent-img');
-
-      accentImages.forEach(img => {
-        if (selection === 'none') {
-          img.classList.add('hidden-icon');
-        } else {
-          img.classList.remove('hidden-icon');
-          img.src = selection === 'standard'
-            ? "../images/Element_AccentActive[1]_Standard.png"
-            : "../images/Element_AccentActive[2]_Strong.png";
-        }
-      });
-
-      updateNoteheads();
-    }
-
-    function updateNoteheads() {
-      const noteCount = parseInt(document.getElementById('noteCountSelect').value);
-      const noteheadImages = document.querySelectorAll('.notehead-img');
-      const articulationImages = document.querySelectorAll('.articulation-img');
-      const accentImages = document.querySelectorAll('.accent-img');
-
-      noteheadImages.forEach((img, idx) => {
-        const isVisible =
-          (noteCount === 1 && idx === 0) ||
-          (noteCount === 2 && (idx === 0 || idx === 2)) ||
-          (noteCount === 4);
-
-        if (isVisible) {
-          img.src = noteheadMap[noteCount];
-          img.classList.remove('hidden-icon');
-          articulationImages[idx].classList.remove('hidden-icon');
-          accentImages[idx].classList.remove('hidden-icon');
-        } else {
-          img.classList.add('hidden-icon');
-          articulationImages[idx].classList.add('hidden-icon');
-          accentImages[idx].classList.add('hidden-icon');
-        }
-      });
-    }
-
-    document.getElementById('noteCountSelect').addEventListener('change', updateNoteheads);
+    document.getElementById('noteCountSelect').addEventListener('change', updateNoteheadTypes);
     document.getElementById('articulationSelect').addEventListener('change', updateArticulation);
     document.getElementById('accentSelect').addEventListener('change', updateAccent);
     document.getElementById('dynamicStartSelect').addEventListener('change', updateDynamics);
     document.getElementById('dynamicEndSelect').addEventListener('change', updateDynamics);
 
     window.addEventListener('DOMContentLoaded', () => {
-      updateNoteheads();
-      updateDynamics();
+      updateNoteheadTypes();
       updateArticulation();
       updateAccent();
+      updateDynamics();
     });
   </script>
 </body>
