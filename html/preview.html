@@ -70,22 +70,22 @@
       <div class="note-columns">
         <div class="note-column">
           <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
-          <img id="articulation" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+          <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
           <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
           <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
-          <img src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+          <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
           <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
           <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
-          <img src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+          <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
           <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
           <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
-          <img src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+          <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
           <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
       </div>
@@ -172,21 +172,21 @@
 
     function updateArticulation() {
       const selection = document.getElementById('articulationSelect').value;
-      const articulation = document.getElementById('articulation');
+      const articulationImages = document.querySelectorAll('.articulation-img');
       const phrase = document.getElementById('phrase');
 
-      articulation.classList.remove('hidden-icon');
       phrase.classList.add('hidden-icon');
+      articulationImages.forEach(img => img.classList.remove('hidden-icon'));
 
       if (selection === 'staccato') {
-        articulation.src = "../images/Element_ArticulationActive[1]_Staccato.png";
+        articulationImages.forEach(img => img.src = "../images/Element_ArticulationActive[1]_Staccato.png");
       } else if (selection === 'tenuto') {
-        articulation.src = "../images/Element_ArticulationActive[2]_Tenuto.png";
+        articulationImages.forEach(img => img.src = "../images/Element_ArticulationActive[2]_Tenuto.png");
       } else if (selection === 'legato') {
-        articulation.classList.add('hidden-icon');
+        articulationImages.forEach(img => img.classList.add('hidden-icon'));
         phrase.classList.remove('hidden-icon');
       } else {
-        articulation.classList.add('hidden-icon');
+        articulationImages.forEach(img => img.classList.add('hidden-icon'));
       }
     }
 
