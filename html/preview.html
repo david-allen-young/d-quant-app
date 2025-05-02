@@ -106,28 +106,65 @@
 
       <label for="dynamicStartSelect">Start Dynamic:</label>
       <select id="dynamicStartSelect">
-        <option value="../images/Element_DynMark[1]_pp.png">pp</option>
-        <option value="../images/Element_DynMark[4]_mf.png">mf</option>
+        <option value="1">pp</option>
+        <option value="2">p</option>
+        <option value="3">mp</option>
+        <option value="4">mf</option>
+        <option value="5">f</option>
+        <option value="6">ff</option>
       </select>
 
       <label for="dynamicEndSelect">End Dynamic:</label>
       <select id="dynamicEndSelect">
-        <option value="../images/Element_DynMark[6]_ff.png">ff</option>
-        <option value="../images/Element_DynMark[5]_f.png">f</option>
+        <option value="1">pp</option>
+        <option value="2">p</option>
+        <option value="3">mp</option>
+        <option value="4">mf</option>
+        <option value="5">f</option>
+        <option value="6">ff</option>
       </select>
     </div>
   </div>
 
   <script>
+    const dynImages = {
+      1: "../images/Element_DynMark[1]_pp.png",
+      2: "../images/Element_DynMark[2]_p.png",
+      3: "../images/Element_DynMark[3]_mp.png",
+      4: "../images/Element_DynMark[4]_mf.png",
+      5: "../images/Element_DynMark[5]_f.png",
+      6: "../images/Element_DynMark[6]_ff.png"
+    };
+
+    const hairpins = {
+      crescendo: "../images/Element_HairpinLong[0]_Crescendo.png",
+      diminuendo: "../images/Element_HairpinLong[1]_Diminuendo.png",
+      none: "../images/Element_HairpinLong[2]_None.png"
+    };
+
+    function updateDynamics() {
+      const startVal = parseInt(document.getElementById('dynamicStartSelect').value);
+      const endVal = parseInt(document.getElementById('dynamicEndSelect').value);
+
+      document.getElementById('dynStart').src = dynImages[startVal];
+
+      if (startVal === endVal) {
+        document.getElementById('dynEnd').src = "../images/Element_DynMark[0]_Blank.png";
+        document.getElementById('hairpin').src = hairpins.none;
+      } else if (startVal < endVal) {
+        document.getElementById('dynEnd').src = dynImages[endVal];
+        document.getElementById('hairpin').src = hairpins.crescendo;
+      } else {
+        document.getElementById('dynEnd').src = dynImages[endVal];
+        document.getElementById('hairpin').src = hairpins.diminuendo;
+      }
+    }
+
     document.getElementById('articulationSelect').addEventListener('change', (e) => {
       document.querySelectorAll('img[alt="Articulation"]').forEach(img => img.src = e.target.value);
     });
-    document.getElementById('dynamicStartSelect').addEventListener('change', (e) => {
-      document.getElementById('dynStart').src = e.target.value;
-    });
-    document.getElementById('dynamicEndSelect').addEventListener('change', (e) => {
-      document.getElementById('dynEnd').src = e.target.value;
-    });
+    document.getElementById('dynamicStartSelect').addEventListener('change', updateDynamics);
+    document.getElementById('dynamicEndSelect').addEventListener('change', updateDynamics);
   </script>
 </body>
 </html>
