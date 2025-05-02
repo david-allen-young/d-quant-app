@@ -208,6 +208,8 @@
       } else {
         articulationImages.forEach(img => img.classList.add('hidden-icon'));
       }
+
+      updateNoteheads();
     }
 
     function updateAccent() {
@@ -224,20 +226,31 @@
             : "../images/Element_AccentActive[2]_Strong.png";
         }
       });
+
+      updateNoteheads();
     }
 
     function updateNoteheads() {
       const noteCount = parseInt(document.getElementById('noteCountSelect').value);
       const noteheadImages = document.querySelectorAll('.notehead-img');
+      const articulationImages = document.querySelectorAll('.articulation-img');
+      const accentImages = document.querySelectorAll('.accent-img');
 
       noteheadImages.forEach((img, idx) => {
-        if ((noteCount === 1 && idx === 0) ||
-            (noteCount === 2 && (idx === 0 || idx === 2)) ||
-            (noteCount === 4)) {
+        const isVisible =
+          (noteCount === 1 && idx === 0) ||
+          (noteCount === 2 && (idx === 0 || idx === 2)) ||
+          (noteCount === 4);
+
+        if (isVisible) {
           img.src = noteheadMap[noteCount];
           img.classList.remove('hidden-icon');
+          articulationImages[idx].classList.remove('hidden-icon');
+          accentImages[idx].classList.remove('hidden-icon');
         } else {
           img.classList.add('hidden-icon');
+          articulationImages[idx].classList.add('hidden-icon');
+          accentImages[idx].classList.add('hidden-icon');
         }
       });
     }
