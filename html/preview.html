@@ -71,22 +71,22 @@
         <div class="note-column">
           <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
           <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
-          <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+          <img class="notehead-img" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
           <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
           <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
-          <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+          <img class="notehead-img" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
           <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
           <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
-          <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+          <img class="notehead-img" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
           <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
           <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
-          <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+          <img class="notehead-img" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
       </div>
 
@@ -100,6 +100,13 @@
     </div>
 
     <div style="text-align: center">
+      <label for="noteCountSelect">Notes:</label>
+      <select id="noteCountSelect">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="4">4</option>
+      </select>
+
       <label for="articulationSelect">Articulation:</label>
       <select id="articulationSelect">
         <option value="staccato">Staccato</option>
@@ -150,6 +157,12 @@
     const hairpins = {
       crescendo: "../images/Element_HairpinLong[0]_Crescendo.png",
       diminuendo: "../images/Element_HairpinLong[1]_Diminuendo.png"
+    };
+
+    const noteheadMap = {
+      1: "../images/Element_NoteheadActive[2]_Half.png",
+      2: "../images/Element_NoteheadActive[1]_Quarter.png",
+      4: "../images/Element_NoteheadActive[0]_Eighth.png"
     };
 
     function updateDynamics() {
@@ -213,12 +226,30 @@
       });
     }
 
+    function updateNoteheads() {
+      const noteCount = parseInt(document.getElementById('noteCountSelect').value);
+      const noteheadImages = document.querySelectorAll('.notehead-img');
+
+      noteheadImages.forEach((img, idx) => {
+        if ((noteCount === 1 && idx === 0) ||
+            (noteCount === 2 && (idx === 0 || idx === 2)) ||
+            (noteCount === 4)) {
+          img.src = noteheadMap[noteCount];
+          img.classList.remove('hidden-icon');
+        } else {
+          img.classList.add('hidden-icon');
+        }
+      });
+    }
+
+    document.getElementById('noteCountSelect').addEventListener('change', updateNoteheads);
     document.getElementById('articulationSelect').addEventListener('change', updateArticulation);
     document.getElementById('accentSelect').addEventListener('change', updateAccent);
     document.getElementById('dynamicStartSelect').addEventListener('change', updateDynamics);
     document.getElementById('dynamicEndSelect').addEventListener('change', updateDynamics);
 
     window.addEventListener('DOMContentLoaded', () => {
+      updateNoteheads();
       updateDynamics();
       updateArticulation();
       updateAccent();
