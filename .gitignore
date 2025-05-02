@@ -1,0 +1,13 @@
+# Ignore generated output files
+/output/
+*.mid
+*.png
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Node/npm (in case of frontend tooling later)
+node_modules/
+dist/
+build/
