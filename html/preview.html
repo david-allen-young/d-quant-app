@@ -15,7 +15,7 @@
       background: white;
       padding: 20px;
       border: 1px solid #ccc;
-      width: 300px; /* fixed width for 4 columns */
+      width: 300px;
     }
     .phrase-layer {
       display: flex;
@@ -64,13 +64,13 @@
   <div>
     <div class="preview-container" id="preview">
       <div class="phrase-layer">
-        <img id="phrase" src="../images/Element_PhraseMark[1]_Legato.png" alt="Phrase" />
+        <img id="phrase" src="../images/Element_PhraseMark[1]_Legato.png" alt="Phrase" class="hidden-icon" />
       </div>
 
       <div class="note-columns">
         <div class="note-column">
           <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
-          <img src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+          <img id="articulation" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
           <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
@@ -99,12 +99,13 @@
       </div>
     </div>
 
-    <!-- Example dropdowns for testing swapping -->
     <div style="text-align: center">
       <label for="articulationSelect">Articulation:</label>
       <select id="articulationSelect">
-        <option value="../images/Element_ArticulationActive[1]_Staccato.png">Staccato</option>
-        <option value="../images/Element_ArticulationActive[2]_Tenuto.png">Tenuto (placeholder)</option>
+        <option value="staccato">Staccato</option>
+        <option value="ordinario">Ordinario</option>
+        <option value="tenuto">Tenuto</option>
+        <option value="legato">Legato</option>
       </select>
 
       <label for="dynamicStartSelect">Start Dynamic:</label>
@@ -169,14 +170,34 @@
       }
     }
 
-    document.getElementById('articulationSelect').addEventListener('change', (e) => {
-      document.querySelectorAll('img[alt="Articulation"]').forEach(img => img.src = e.target.value);
-    });
+    function updateArticulation() {
+      const selection = document.getElementById('articulationSelect').value;
+      const articulation = document.getElementById('articulation');
+      const phrase = document.getElementById('phrase');
+
+      articulation.classList.remove('hidden-icon');
+      phrase.classList.add('hidden-icon');
+
+      if (selection === 'staccato') {
+        articulation.src = "../images/Element_ArticulationActive[1]_Staccato.png";
+      } else if (selection === 'tenuto') {
+        articulation.src = "../images/Element_ArticulationActive[2]_Tenuto.png";
+      } else if (selection === 'legato') {
+        articulation.classList.add('hidden-icon');
+        phrase.classList.remove('hidden-icon');
+      } else {
+        articulation.classList.add('hidden-icon');
+      }
+    }
+
+    document.getElementById('articulationSelect').addEventListener('change', updateArticulation);
     document.getElementById('dynamicStartSelect').addEventListener('change', updateDynamics);
     document.getElementById('dynamicEndSelect').addEventListener('change', updateDynamics);
 
-    // Ensure correct initial state on load
-    window.addEventListener('DOMContentLoaded', updateDynamics);
+    window.addEventListener('DOMContentLoaded', () => {
+      updateDynamics();
+      updateArticulation();
+    });
   </script>
 </body>
 </html>
