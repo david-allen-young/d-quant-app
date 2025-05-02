@@ -1,191 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>D-Quant Demo</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #f0f0f0;
-      margin: 0;
-      padding: 0;
-    }
-    .header {
-      text-align: center;
-      font-size: 1.5rem;
-      padding: 1rem;
-      background: #e0e0e0;
-      border-bottom: 1px solid #ccc;
-    }
-    .main-layout {
-      display: flex;
-      justify-content: space-between;
-      padding: 2rem;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-    .panel {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      width: 200px;
-    }
-    .preview-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .preview-container {
-      background: white;
-      padding: 20px;
-      border: 1px solid #ccc;
-      width: 300px;
-    }
-    .phrase-layer,
-    .dynamic-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 6px 0;
-    }
-    .dynamic-inner {
-      width: 300px;
-      display: flex;
-      justify-content: space-between;
-      margin: 0 auto;
-    }
-    .note-columns {
-      display: flex;
-      justify-content: space-between;
-    }
-    .note-column {
-      width: 25%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .note-column img {
-      margin: 2px 0;
-    }
-    select, input[type="radio"] {
-      font-size: 1rem;
-    }
-    .dynamic-inner img {
-      margin: 0 5px;
-    }
-    .hidden-icon {
-      visibility: hidden;
-    }
-    .footer {
-      text-align: center;
-      margin-top: 1rem;
-    }
-  </style>
-</head>
-<body>
-  <div class="header">D-Quant Demo</div>
-  <div class="main-layout">
-    <div class="panel">
-      <div>
-        <strong>Note(s)</strong><br/>
-        <label><input type="radio" name="noteCount" value="1" checked> 1</label>
-        <label><input type="radio" name="noteCount" value="2"> 2</label>
-        <label><input type="radio" name="noteCount" value="4"> 4</label>
-      </div>
-      <label>Accent
-        <select id="accentSelect">
-          <option value="none">None</option>
-          <option value="standard">Standard</option>
-          <option value="strong">Strong</option>
-        </select>
-      </label>
-      <label>Articulation
-        <select id="articulationSelect">
-          <option value="staccato">Staccato</option>
-          <option value="ordinario">Ordinario</option>
-          <option value="tenuto">Tenuto</option>
-          <option value="legato">Legato</option>
-        </select>
-      </label>
-      <label>Pitch
-        <select id="pitchSelect">
-          <option>C4</option>
-          <option>D4</option>
-          <option>E4</option>
-          <option>F4</option>
-          <option>G4</option>
-        </select>
-      </label>
-    </div>
+<div class="control-panel">
+  <label for="noteCountSelect">Notes:</label>
+  <select id="noteCountSelect">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="4">4</option>
+  </select>
 
-    <div class="preview-wrapper">
-      <div class="preview-container" id="preview">
-        <div class="phrase-layer">
-          <img id="phrase" src="../images/Element_PhraseMark[1]_Legato.png" alt="Phrase" class="hidden-icon" />
-        </div>
-        <div class="note-columns">
-          <div class="note-column">
-            <img class="accent-img" />
-            <img class="articulation-img" />
-            <img class="notehead-img" />
-          </div>
-          <div class="note-column">
-            <img class="accent-img" />
-            <img class="articulation-img" />
-            <img class="notehead-img" />
-          </div>
-          <div class="note-column">
-            <img class="accent-img" />
-            <img class="articulation-img" />
-            <img class="notehead-img" />
-          </div>
-          <div class="note-column">
-            <img class="accent-img" />
-            <img class="articulation-img" />
-            <img class="notehead-img" />
-          </div>
-        </div>
-        <div class="dynamic-row">
-          <div class="dynamic-inner">
-            <img id="dynStart" src="../images/Element_DynMark[1]_pp.png" alt="pp" />
-            <img id="hairpin" src="../images/Element_HairpinLong[0]_Crescendo.png" alt="Hairpin" />
-            <img id="dynEnd" src="../images/Element_DynMark[6]_ff.png" alt="ff" />
-          </div>
-        </div>
-      </div>
-      <div class="footer">
-        <button style="font-size: 1rem; padding: 0.5rem 1rem;">Generate MIDI</button>
-      </div>
-    </div>
+  <label for="accentSelect">Accent:</label>
+  <select id="accentSelect">
+    <option value="none">None</option>
+    <option value="standard">Standard</option>
+    <option value="strong">Strong</option>
+  </select>
 
-    <div class="panel">
-      <label><strong>Dynamics</strong><br/></label>
-      <label>Begin
-        <select id="dynamicStartSelect">
-          <option value="1">pp</option>
-          <option value="2">p</option>
-          <option value="3">mp</option>
-          <option value="4">mf</option>
-          <option value="5">f</option>
-          <option value="6">ff</option>
-        </select>
-      </label>
-      <label>End
-        <select id="dynamicEndSelect">
-          <option value="1">pp</option>
-          <option value="2">p</option>
-          <option value="3">mp</option>
-          <option value="4">mf</option>
-          <option value="5">f</option>
-          <option value="6">ff</option>
-        </select>
-      </label>
-      <label>Duration
-        <select id="durationSelect">
-          <option value="2.0">2.0</option>
-        </select>
-      </label>
-    </div>
-  </div>
-</body>
-</html>
+  <label for="articulationSelect">Articulation:</label>
+  <select id="articulationSelect">
+    <option value="staccato">Staccato</option>
+    <option value="ordinario">Ordinario</option>
+    <option value="tenuto">Tenuto</option>
+    <option value="legato">Legato</option>
+  </select>
+
+  <label for="dynamicStartSelect">Start Dynamic:</label>
+  <select id="dynamicStartSelect">
+    <option value="1">pp</option>
+    <option value="2">p</option>
+    <option value="3">mp</option>
+    <option value="4">mf</option>
+    <option value="5">f</option>
+    <option value="6">ff</option>
+  </select>
+
+  <label for="dynamicEndSelect">End Dynamic:</label>
+  <select id="dynamicEndSelect">
+    <option value="1">pp</option>
+    <option value="2">p</option>
+    <option value="3">mp</option>
+    <option value="4">mf</option>
+    <option value="5">f</option>
+    <option value="6">ff</option>
+  </select>
+</div>
