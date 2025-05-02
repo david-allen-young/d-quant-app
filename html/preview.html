@@ -55,6 +55,9 @@
     .dynamic-inner img {
       margin: 0 5px;
     }
+    .hidden-icon {
+      visibility: hidden;
+    }
   </style>
 </head>
 <body>
@@ -138,25 +141,31 @@
 
     const hairpins = {
       crescendo: "../images/Element_HairpinLong[0]_Crescendo.png",
-      diminuendo: "../images/Element_HairpinLong[1]_Diminuendo.png",
-      none: "../images/Element_HairpinLong[2]_None.png"
+      diminuendo: "../images/Element_HairpinLong[1]_Diminuendo.png"
     };
 
     function updateDynamics() {
       const startVal = parseInt(document.getElementById('dynamicStartSelect').value);
       const endVal = parseInt(document.getElementById('dynamicEndSelect').value);
 
-      document.getElementById('dynStart').src = dynImages[startVal];
+      const dynStart = document.getElementById('dynStart');
+      const dynEnd = document.getElementById('dynEnd');
+      const hairpin = document.getElementById('hairpin');
+
+      dynStart.src = dynImages[startVal];
+      dynStart.classList.remove('hidden-icon');
+      dynEnd.classList.remove('hidden-icon');
+      hairpin.classList.remove('hidden-icon');
 
       if (startVal === endVal) {
-        document.getElementById('dynEnd').src = "../images/Element_DynMark[0]_Blank.png";
-        document.getElementById('hairpin').src = hairpins.none;
+        dynEnd.classList.add('hidden-icon');
+        hairpin.classList.add('hidden-icon');
       } else if (startVal < endVal) {
-        document.getElementById('dynEnd').src = dynImages[endVal];
-        document.getElementById('hairpin').src = hairpins.crescendo;
+        dynEnd.src = dynImages[endVal];
+        hairpin.src = hairpins.crescendo;
       } else {
-        document.getElementById('dynEnd').src = dynImages[endVal];
-        document.getElementById('hairpin').src = hairpins.diminuendo;
+        dynEnd.src = dynImages[endVal];
+        hairpin.src = hairpins.diminuendo;
       }
     }
 
