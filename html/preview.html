@@ -69,22 +69,22 @@
 
       <div class="note-columns">
         <div class="note-column">
-          <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
+          <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
           <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
           <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
-          <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
+          <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
           <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
           <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
-          <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
+          <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
           <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
           <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
         <div class="note-column">
-          <img src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
+          <img class="accent-img" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
           <img class="articulation-img" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
           <img src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
         </div>
@@ -106,6 +106,13 @@
         <option value="ordinario">Ordinario</option>
         <option value="tenuto">Tenuto</option>
         <option value="legato">Legato</option>
+      </select>
+
+      <label for="accentSelect">Accent:</label>
+      <select id="accentSelect">
+        <option value="none">None</option>
+        <option value="standard">Standard</option>
+        <option value="strong">Strong</option>
       </select>
 
       <label for="dynamicStartSelect">Start Dynamic:</label>
@@ -190,13 +197,31 @@
       }
     }
 
+    function updateAccent() {
+      const selection = document.getElementById('accentSelect').value;
+      const accentImages = document.querySelectorAll('.accent-img');
+
+      accentImages.forEach(img => {
+        if (selection === 'none') {
+          img.classList.add('hidden-icon');
+        } else {
+          img.classList.remove('hidden-icon');
+          img.src = selection === 'standard'
+            ? "../images/Element_AccentActive[1]_Standard.png"
+            : "../images/Element_AccentActive[2]_Strong.png";
+        }
+      });
+    }
+
     document.getElementById('articulationSelect').addEventListener('change', updateArticulation);
+    document.getElementById('accentSelect').addEventListener('change', updateAccent);
     document.getElementById('dynamicStartSelect').addEventListener('change', updateDynamics);
     document.getElementById('dynamicEndSelect').addEventListener('change', updateDynamics);
 
     window.addEventListener('DOMContentLoaded', () => {
       updateDynamics();
       updateArticulation();
+      updateAccent();
     });
   </script>
 </body>
