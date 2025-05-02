@@ -17,13 +17,23 @@
       border: 1px solid #ccc;
       width: 300px; /* fixed width for 4 columns */
     }
-    .phrase-layer,
+    .phrase-layer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 6px 0;
+    }
     .dynamic-row {
       display: flex;
       justify-content: center;
       align-items: center;
       margin: 6px 0;
-	  padding: 0 180px;
+    }
+    .dynamic-inner {
+      width: 200px; /* adjust as needed to match phrase/note width */
+      display: flex;
+      justify-content: space-between;
+      margin: 0 auto;
     }
     .note-columns {
       display: flex;
@@ -42,7 +52,7 @@
       margin-top: 1rem;
       font-size: 1rem;
     }
-    .dynamic-row img {
+    .dynamic-inner img {
       margin: 0 5px;
     }
   </style>
@@ -72,9 +82,11 @@
       </div>
 
       <div class="dynamic-row">
-        <img id="dynStart" src="../images/Element_DynMark[1]_pp.png" alt="pp" />
-        <img id="hairpin" src="../images/Element_HairpinLong[0]_Crescendo.png" alt="Hairpin" />
-        <img id="dynEnd" src="../images/Element_DynMark[6]_ff.png" alt="ff" />
+        <div class="dynamic-inner">
+          <img id="dynStart" src="../images/Element_DynMark[1]_pp.png" alt="pp" />
+          <img id="hairpin" src="../images/Element_HairpinLong[0]_Crescendo.png" alt="Hairpin" />
+          <img id="dynEnd" src="../images/Element_DynMark[6]_ff.png" alt="ff" />
+        </div>
       </div>
     </div>
 
