@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>D-Quant Symbol Preview</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f0f0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+    .preview-container {
+      background: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+      width: max-content;
+    }
+    .symbol-layer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 2px 0;
+    }
+    .dynamic-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .dynamic-row img {
+      margin: 0 5px;
+    }
+    select {
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="preview-container" id="preview">
+      <div class="symbol-layer">
+        <img id="phrase" src="Element_PhraseMark[1]_Legato.png" alt="Phrase" />
+      </div>
+      <div class="symbol-layer">
+        <img id="accent" src="Element_AccentActive[1]_Standard.png" alt="Accent" />
+      </div>
+      <div class="symbol-layer">
+        <img id="articulation" src="Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+      </div>
+      <div class="symbol-layer">
+        <img id="notehead" src="Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+      </div>
+      <div class="dynamic-row">
+        <img id="dynStart" src="Element_DynMark[1]_pp.png" alt="pp" />
+        <img id="hairpin" src="Element_HairpinLong[0]_Crescendo.png" alt="Hairpin" />
+        <img id="dynEnd" src="Element_DynMark[6]_ff.png" alt="ff" />
+      </div>
+    </div>
+
+    <!-- Example dropdowns for testing swapping -->
+    <div style="text-align: center">
+      <label for="articulationSelect">Articulation:</label>
+      <select id="articulationSelect">
+        <option value="Element_ArticulationActive[1]_Staccato.png">Staccato</option>
+        <option value="Element_ArticulationActive[2]_Tenuto.png">Tenuto (placeholder)</option>
+      </select>
+
+      <label for="dynamicStartSelect">Start Dynamic:</label>
+      <select id="dynamicStartSelect">
+        <option value="Element_DynMark[1]_pp.png">pp</option>
+        <option value="Element_DynMark[3]_mf.png">mf (placeholder)</option>
+      </select>
+
+      <label for="dynamicEndSelect">End Dynamic:</label>
+      <select id="dynamicEndSelect">
+        <option value="Element_DynMark[6]_ff.png">ff</option>
+        <option value="Element_DynMark[4]_f.png">f (placeholder)</option>
+      </select>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('articulationSelect').addEventListener('change', (e) => {
+      document.getElementById('articulation').src = e.target.value;
+    });
+    document.getElementById('dynamicStartSelect').addEventListener('change', (e) => {
+      document.getElementById('dynStart').src = e.target.value;
+    });
+    document.getElementById('dynamicEndSelect').addEventListener('change', (e) => {
+      document.getElementById('dynEnd').src = e.target.value;
+    });
+  </script>
+</body>
+</html>
