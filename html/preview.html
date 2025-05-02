@@ -19,13 +19,13 @@
     }
     .symbol-layer {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       margin: 2px 0;
     }
     .dynamic-row {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       margin-top: 10px;
     }
@@ -42,21 +42,21 @@
   <div>
     <div class="preview-container" id="preview">
       <div class="symbol-layer">
-        <img id="phrase" src="Element_PhraseMark[1]_Legato.png" alt="Phrase" />
+        <img id="phrase" src="../images/Element_PhraseMark[1]_Legato.png" alt="Phrase" />
       </div>
       <div class="symbol-layer">
-        <img id="accent" src="Element_AccentActive[1]_Standard.png" alt="Accent" />
+        <img id="accent" src="../images/Element_AccentActive[1]_Standard.png" alt="Accent" />
       </div>
       <div class="symbol-layer">
-        <img id="articulation" src="Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
+        <img id="articulation" src="../images/Element_ArticulationActive[1]_Staccato.png" alt="Articulation" />
       </div>
       <div class="symbol-layer">
-        <img id="notehead" src="Element_NoteheadActive[2]_Half.png" alt="Notehead" />
+        <img id="notehead" src="../images/Element_NoteheadActive[2]_Half.png" alt="Notehead" />
       </div>
       <div class="dynamic-row">
-        <img id="dynStart" src="Element_DynMark[1]_pp.png" alt="pp" />
-        <img id="hairpin" src="Element_HairpinLong[0]_Crescendo.png" alt="Hairpin" />
-        <img id="dynEnd" src="Element_DynMark[6]_ff.png" alt="ff" />
+        <img id="dynStart" src="../images/Element_DynMark[1]_pp.png" alt="pp" />
+        <img id="hairpin" src="../images/Element_HairpinLong[0]_Crescendo.png" alt="Hairpin" />
+        <img id="dynEnd" src="../images/Element_DynMark[6]_ff.png" alt="ff" />
       </div>
     </div>
 
@@ -64,20 +64,20 @@
     <div style="text-align: center">
       <label for="articulationSelect">Articulation:</label>
       <select id="articulationSelect">
-        <option value="Element_ArticulationActive[1]_Staccato.png">Staccato</option>
-        <option value="Element_ArticulationActive[2]_Tenuto.png">Tenuto (placeholder)</option>
+        <option value="../images/Element_ArticulationActive[1]_Staccato.png">Staccato</option>
+        <option value="../images/Element_ArticulationActive[2]_Tenuto.png">Tenuto (placeholder)</option>
       </select>
 
       <label for="dynamicStartSelect">Start Dynamic:</label>
       <select id="dynamicStartSelect">
-        <option value="Element_DynMark[1]_pp.png">pp</option>
-        <option value="Element_DynMark[3]_mf.png">mf (placeholder)</option>
+        <option value="../images/Element_DynMark[1]_pp.png">pp</option>
+        <option value="../images/Element_DynMark[4]_mf.png">mf (corrected)</option>
       </select>
 
       <label for="dynamicEndSelect">End Dynamic:</label>
       <select id="dynamicEndSelect">
-        <option value="Element_DynMark[6]_ff.png">ff</option>
-        <option value="Element_DynMark[4]_f.png">f (placeholder)</option>
+        <option value="../images/Element_DynMark[6]_ff.png">ff</option>
+        <option value="../images/Element_DynMark[5]_f.png">f (corrected)</option>
       </select>
     </div>
   </div>
