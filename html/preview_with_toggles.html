@@ -16,6 +16,7 @@
       display: flex;
       gap: 2rem;
       align-items: flex-start;
+      justify-content: center;
     }
 
     .preview-container {
@@ -64,7 +65,8 @@
       visibility: hidden;
     }
 
-    .control-panel {
+    .control-panel,
+    .dynamic-panel {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
@@ -72,17 +74,20 @@
       min-width: 160px;
     }
 
-    .control-panel label {
+    .control-panel label,
+    .dynamic-panel label {
       margin-bottom: 0.25rem;
     }
 
-    .control-panel select {
+    .control-panel select,
+    .dynamic-panel select {
       font-size: 1rem;
     }
   </style>
 </head>
 <body>
   <div class="layout-container">
+    <!-- LEFT PANEL -->
     <div class="control-panel">
       <label for="noteCountSelect">Notes:</label>
       <select id="noteCountSelect">
@@ -105,28 +110,9 @@
         <option value="tenuto">Tenuto</option>
         <option value="legato">Legato</option>
       </select>
-
-      <label for="dynamicStartSelect">Start Dynamic:</label>
-      <select id="dynamicStartSelect">
-        <option value="1">pp</option>
-        <option value="2">p</option>
-        <option value="3">mp</option>
-        <option value="4">mf</option>
-        <option value="5">f</option>
-        <option value="6">ff</option>
-      </select>
-
-      <label for="dynamicEndSelect">End Dynamic:</label>
-      <select id="dynamicEndSelect">
-        <option value="1">pp</option>
-        <option value="2">p</option>
-        <option value="3">mp</option>
-        <option value="4">mf</option>
-        <option value="5">f</option>
-        <option value="6">ff</option>
-      </select>
     </div>
 
+    <!-- CENTER PANEL -->
     <div class="preview-container" id="preview">
       <div class="phrase-layer">
         <img id="phrase" src="../images/Element_PhraseMark[1]_Legato.png" alt="Phrase" class="hidden-icon" />
@@ -162,6 +148,29 @@
           <img id="dynEnd" src="../images/Element_DynMark[6]_ff.png" alt="ff" />
         </div>
       </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="dynamic-panel">
+      <label for="dynamicStartSelect">Start Dynamic:</label>
+      <select id="dynamicStartSelect">
+        <option value="1">pp</option>
+        <option value="2">p</option>
+        <option value="3">mp</option>
+        <option value="4">mf</option>
+        <option value="5">f</option>
+        <option value="6">ff</option>
+      </select>
+
+      <label for="dynamicEndSelect">End Dynamic:</label>
+      <select id="dynamicEndSelect">
+        <option value="1">pp</option>
+        <option value="2">p</option>
+        <option value="3">mp</option>
+        <option value="4">mf</option>
+        <option value="5">f</option>
+        <option value="6">ff</option>
+      </select>
     </div>
   </div>
 
@@ -204,17 +213,13 @@
       document.querySelectorAll('.note-column').forEach((col, i) => {
         const state = noteStates[i];
         const [accentImg, articulationImg, noteheadImg] = col.querySelectorAll('img');
-
-        // Notehead
         noteheadImg.src = noteheadMap[state.notehead];
         noteheadImg.classList.toggle('hidden-icon', !state.visible);
 
-        // Accent
         if (state.accent === 1) accentImg.src = "../images/Element_AccentActive[1]_Standard.png";
         else if (state.accent === 2) accentImg.src = "../images/Element_AccentActive[2]_Strong.png";
         accentImg.classList.toggle('hidden-icon', state.accent === 0 || !state.visible);
 
-        // Articulation
         if (state.articulation === 1) articulationImg.src = "../images/Element_ArticulationActive[1]_Staccato.png";
         else if (state.articulation === 2) articulationImg.src = "../images/Element_ArticulationActive[2]_Tenuto.png";
         articulationImg.classList.toggle('hidden-icon', state.articulation === 0 || !state.visible);
