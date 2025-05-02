@@ -30,6 +30,11 @@
       gap: 1rem;
       width: 200px;
     }
+    .preview-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
     .preview-container {
       background: white;
       padding: 20px;
@@ -113,12 +118,11 @@
       </label>
     </div>
 
-    <div>
+    <div class="preview-wrapper">
       <div class="preview-container" id="preview">
         <div class="phrase-layer">
           <img id="phrase" src="../images/Element_PhraseMark[1]_Legato.png" alt="Phrase" class="hidden-icon" />
         </div>
-
         <div class="note-columns">
           <div class="note-column">
             <img class="accent-img" />
@@ -141,7 +145,6 @@
             <img class="notehead-img" />
           </div>
         </div>
-
         <div class="dynamic-row">
           <div class="dynamic-inner">
             <img id="dynStart" src="../images/Element_DynMark[1]_pp.png" alt="pp" />
@@ -149,10 +152,9 @@
             <img id="dynEnd" src="../images/Element_DynMark[6]_ff.png" alt="ff" />
           </div>
         </div>
-
-        <div class="footer">
-          <button style="font-size: 1rem; padding: 0.5rem 1rem;">Generate MIDI</button>
-        </div>
+      </div>
+      <div class="footer">
+        <button style="font-size: 1rem; padding: 0.5rem 1rem;">Generate MIDI</button>
       </div>
     </div>
 
