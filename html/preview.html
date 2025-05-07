@@ -296,18 +296,55 @@
         hairpin.src = startVal < endVal ? hairpins.crescendo : hairpins.diminuendo;
       }
     }
+	
+	async function generateNote() {
+		const payload = {
+		  noteCount: document.getElementById('noteCountSelect').value,
+		  accent: document.getElementById('accentSelect').value,
+		  articulation: document.getElementById('articulationSelect').value,
+		  pitch: document.getElementById('pitchSelect').value,
+		  dynamicStart: document.getElementById('dynamicStartSelect').value,
+		  dynamicEnd: document.getElementById('dynamicEndSelect').value
+		};
 
+		const response = await fetch('/api/generate_note', {
+		  method: 'POST',
+		  headers: { 'Content-Type': 'application/json' },
+		  body: JSON.stringify(payload)
+		});
+
+		if (!response.ok) {
+		  alert('Generation failed.');
+		  return;
+		}
+
+		const data = await response.json();
+		if (data.imageUrl) {
+		  const previewImg = document.createElement('img');
+		  previewImg.src = data.imageUrl;
+		  previewImg.alt = "Generated Preview";
+		  previewImg.style.width = "100%";
+		  previewImg.style.marginTop = "1rem";
+		  document.getElementById('preview').appendChild(previewImg);
+		}
+
+		if (data.midiUrl) {
+		  const downloadLink = document.createElement('a');
+		  downloadLink.href = data.midiUrl;
+		  downloadLink.textContent = "Download MIDI";
+		  downloadLink.download = "";
+		  downloadLink.style.display = "block";
+		  downloadLink.style.marginTop = "1rem";
+		  document.getElementById('preview').appendChild(downloadLink);
+		}
+	}
+	
+	document.getElementById('generateBtn').addEventListener('click', generateNote);	
     document.getElementById('noteCountSelect').addEventListener('change', updateNoteheadTypes);
     document.getElementById('articulationSelect').addEventListener('change', updateArticulation);
     document.getElementById('accentSelect').addEventListener('change', updateAccent);
     document.getElementById('dynamicStartSelect').addEventListener('change', updateDynamics);
     document.getElementById('dynamicEndSelect').addEventListener('change', updateDynamics);
-
-	document.getElementById('generateBtn').addEventListener('click', () => {
-		console.log("Generate clicked");
-		// Placeholder: Use pitch, duration, note count, etc. here
-	});
-
 
     window.addEventListener('DOMContentLoaded', () => {
       updateNoteheadTypes();
