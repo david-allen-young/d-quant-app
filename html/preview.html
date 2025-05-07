@@ -319,24 +319,34 @@
 		}
 
 		const data = await response.json();
-		if (data.imageUrl) {
-		  const previewImg = document.createElement('img');
-		  previewImg.src = data.imageUrl;
-		  previewImg.alt = "Generated Preview";
-		  previewImg.style.width = "100%";
-		  previewImg.style.marginTop = "1rem";
-		  document.getElementById('preview').appendChild(previewImg);
+		
+		// Open popup window
+		const popup = window.open('', '_blank', 'width=600,height=400');
+		if (!popup) {
+		  alert('Popup blocked. Please allow popups for this site.');
+		  return;
 		}
-
-		if (data.midiUrl) {
-		  const downloadLink = document.createElement('a');
-		  downloadLink.href = data.midiUrl;
-		  downloadLink.textContent = "Download MIDI";
-		  downloadLink.download = "";
-		  downloadLink.style.display = "block";
-		  downloadLink.style.marginTop = "1rem";
-		  document.getElementById('preview').appendChild(downloadLink);
-		}
+		
+		// Write content to the popup
+		popup.document.write(`
+		  <html>
+		  <head>
+			<title>Generated Note</title>
+			<style>
+			  body { font-family: sans-serif; padding: 2rem; text-align: center; background: #f9f9f9; }
+			  img { max-width: 100%; height: auto; margin-bottom: 1rem; }
+			  a { font-size: 1.1rem; text-decoration: none; color: #3366cc; }
+			</style>
+		  </head>
+		  <body>
+			<h2>Generated Note</h2>
+			<img src="${data.imageUrl}" alt="Generated Preview" />
+			<br />
+			<a href="${data.midiUrl}" download>Download MIDI</a>
+		  </body>
+		  </html>
+		`);
+		popup.document.close();		
 	}
 	
 	document.getElementById('generateBtn').addEventListener('click', generateNote);	
