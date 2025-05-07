@@ -296,18 +296,65 @@
         hairpin.src = startVal < endVal ? hairpins.crescendo : hairpins.diminuendo;
       }
     }
+	
+	async function generateNote() {
+		const payload = {
+		  noteCount: document.getElementById('noteCountSelect').value,
+		  accent: document.getElementById('accentSelect').value,
+		  articulation: document.getElementById('articulationSelect').value,
+		  pitch: document.getElementById('pitchSelect').value,
+		  dynamicStart: document.getElementById('dynamicStartSelect').value,
+		  dynamicEnd: document.getElementById('dynamicEndSelect').value
+		};
 
+		const response = await fetch('/api/generate_note', {
+		  method: 'POST',
+		  headers: { 'Content-Type': 'application/json' },
+		  body: JSON.stringify(payload)
+		});
+
+		if (!response.ok) {
+		  alert('Generation failed.');
+		  return;
+		}
+
+		const data = await response.json();
+		
+		// Open popup window
+		const popup = window.open('', '_blank', 'width=600,height=400');
+		if (!popup) {
+		  alert('Popup blocked. Please allow popups for this site.');
+		  return;
+		}
+		
+		// Write content to the popup
+		popup.document.write(`
+		  <html>
+		  <head>
+			<title>Generated Note</title>
+			<style>
+			  body { font-family: sans-serif; padding: 2rem; text-align: center; background: #f9f9f9; }
+			  img { max-width: 100%; height: auto; margin-bottom: 1rem; }
+			  a { font-size: 1.1rem; text-decoration: none; color: #3366cc; }
+			</style>
+		  </head>
+		  <body>
+			<h2>Generated Note</h2>
+			<img src="${data.imageUrl}" alt="Generated Preview" />
+			<br />
+			<a href="${data.midiUrl}" download>Download MIDI</a>
+		  </body>
+		  </html>
+		`);
+		popup.document.close();		
+	}
+	
+	document.getElementById('generateBtn').addEventListener('click', generateNote);	
     document.getElementById('noteCountSelect').addEventListener('change', updateNoteheadTypes);
     document.getElementById('articulationSelect').addEventListener('change', updateArticulation);
     document.getElementById('accentSelect').addEventListener('change', updateAccent);
     document.getElementById('dynamicStartSelect').addEventListener('change', updateDynamics);
     document.getElementById('dynamicEndSelect').addEventListener('change', updateDynamics);
-
-	document.getElementById('generateBtn').addEventListener('click', () => {
-		console.log("Generate clicked");
-		// Placeholder: Use pitch, duration, note count, etc. here
-	});
-
 
     window.addEventListener('DOMContentLoaded', () => {
       updateNoteheadTypes();

@@ -1,84 +1,123 @@
 package main
 
 import (
-	"crypto/rand"
+	"encoding/json"
+	"os/exec"
+	"time"
+	"math/rand"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
-	// "os/exec"
 	"log"
 	"path/filepath"
 )
 
-func createImageHandler(w http.ResponseWriter, r *http.Request) {
+type GenerateNoteRequest struct {
+	NoteCount    string `json:"noteCount"`
+	Accent       string `json:"accent"`
+	Articulation string `json:"articulation"`
+	Pitch        string `json:"pitch"`
+	DynamicStart string `json:"dynamicStart"`
+	DynamicEnd   string `json:"dynamicEnd"`
+}
+
+type GenerateNoteResponse struct {
+	ImageURL string `json:"imageUrl"`
+	MidiURL  string `json:"midiUrl"`
+}
+
+func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
+    // Add this to allow CORS from anywhere (for dev only)
+    w.Header().Set("Access-Control-Allow-Origin", "*")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+    w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+
+    // Handle preflight (OPTIONS) request
+    if r.Method == http.MethodOptions {
+        w.WriteHeader(http.StatusNoContent)
+        return
+    }
+
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("405 method not allowed"))
 		return
 	}
-	
-	// Get form values
-	quarterNote := r.FormValue("quarterNote")
-	halfNote := r.FormValue("halfNote")
-	wholeNote := r.FormValue("wholeNote")
-	fmt.Printf("Received values: %s and %s and %s\n", quarterNote, halfNote, wholeNote)
 
-	// Execute the `date` command
-	//cmd := exec.Command("date")
-	//output, err := cmd.Output()
-	//if err != nil {
-	//	http.Error(w, fmt.Sprintf("Failed to execute date command: %v", err), http.StatusInternalServerError)
-	//	return
-	//}
-	//fmt.Printf("Date: %s\n", output)
-
-	// Create an image id that can be referenced later
-	imageID := rand.Text()
-
-	newUrl := fmt.Sprintf("/result?id=%s", imageID)
-	http.Redirect(w, r, newUrl, http.StatusSeeOther)
-}
-
-func getImageHandler(w http.ResponseWriter, r *http.Request) {
-	// filename := "/tmp/placeholder.png"
-	filename := "placeholder.png"
-	imageID := r.FormValue("id")
-	if imageID != "" {
-		//filename = fmt.Sprintf("/tmp/%s.png", imageID)
-		filename = fmt.Sprintf("%s.png", imageID)
-	}
-
-	fmt.Printf("Checking for an image file at %s\n", filename)
-	file, err := os.Open(filename)
+	var req GenerateNoteRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		filePath := filepath.Join(".", "waiting.html")
-		http.ServeFile(w, r, filePath)
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
-	defer file.Close()
 
-	w.Header().Set("Content-Type", "image/png")
+	// Generate a unique ID
+	id := fmt.Sprintf("%d", rand.Intn(1e9))
+	imageFile := filepath.Join("..", "output", id+".png")
+	midiFile := filepath.Join("..", "output", id+".mid")
 
-	_, err = io.Copy(w, file)
+	// Construct CLI args
+	cliPath := filepath.Join("..", "cli", "dquant_cli.exe")
+	args := []string{
+		"--output_id", id,
+		"--notes", req.NoteCount,
+		"--accent", req.Accent,
+		"--articulation", req.Articulation,
+		"--pitch", req.Pitch,
+		"--dyn_start", req.DynamicStart,
+		"--dyn_end", req.DynamicEnd,
+	}
+
+	fmt.Printf("Calling CLI: %s %v\n", cliPath, args)
+
+	cmd := exec.Command(cliPath, args...)
+	err = cmd.Run()
 	if err != nil {
-		http.Error(w, "Error serving image", http.StatusInternalServerError)
+		http.Error(w, "CLI execution failed: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-}
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	filePath := filepath.Join(".", "index.html")
-	http.ServeFile(w, r, filePath)
+	// Wait up to 3 seconds for files to appear
+	timeout := time.After(3 * time.Second)
+	tick := time.Tick(100 * time.Millisecond)
+	foundImage, foundMidi := false, false
+
+	for !(foundImage && foundMidi) {
+		select {
+		case <-timeout:
+			http.Error(w, "Timed out waiting for files", http.StatusInternalServerError)
+			return
+		case <-tick:
+			if !foundImage {
+				if _, err := os.Stat(imageFile); err == nil {
+					foundImage = true
+				}
+			}
+			if !foundMidi {
+				if _, err := os.Stat(midiFile); err == nil {
+					foundMidi = true
+				}
+			}
+		}
+	}
+
+	resp := GenerateNoteResponse{
+		ImageURL: "/output/" + id + ".png",
+		MidiURL:  "/output/" + id + ".mid",
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(resp)
 }
 
 func main() {
 	fmt.Println("You are running version 0.0.1")
 	
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/result", getImageHandler)
-	http.HandleFunc("/api/create_image", createImageHandler)
+	rand.Seed(time.Now().UnixNano())
+	http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir("../html"))))
+	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("../images"))))
+	http.HandleFunc("/api/generate_note", generateNoteHandler)
+	fs := http.FileServer(http.Dir("../output"))
+	http.Handle("/output/", http.StripPrefix("/output/", fs))
+
 	fmt.Println("Starting server at :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
