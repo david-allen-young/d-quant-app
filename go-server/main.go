@@ -57,18 +57,56 @@ func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Construct CLI args
 	cliPath := filepath.Join("..", "cli", "dquant_cli.exe")
+	
+	// Map numeric dynamic levels to string names
+	dynMark := map[string]string{"1": "pp", "2": "p", "3": "mp", "4": "mf", "5": "f", "6": "ff"}
+	dynStartStr := dynMark[req.DynamicStart]
+	dynEndStr := dynMark[req.DynamicEnd]
+
+	// Parse note count
+	noteCount, _ := strconv.Atoi(req.NoteCount)
+
+	// Build note list (same pitch repeated for now)
+	noteList := []map[string]interface{}{}
+	for i := 0; i < noteCount; i++ {
+		note := map[string]interface{}{
+			"pitch":        req.Pitch + "4",
+			"duration":     1.0,
+			"articulation": req.Articulation,
+			"accent":       req.Accent,
+		}
+		noteList = append(noteList, note)
+	}
+
+	// Build phrase JSON
+	phraseJson := map[string]interface{}{
+		"phrase": map[string]interface{}{
+			"slur":      false, // can add toggle later
+			"dyn_start": dynStartStr,
+			"dyn_end":   dynEndStr,
+		},
+		"notes": noteList,
+	}
+
+	// Write phrase JSON to file
+	jsonPath := filepath.Join("..", "output", "phrase_"+id+".json")
+	jsonFile, err := os.Create(jsonPath)
+	if err != nil {
+		http.Error(w, "Failed to write phrase JSON: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(jsonFile).Encode(phraseJson)
+	jsonFile.Close()
+
+	// Call real dquant_phrase_cli
+	cliPath := filepath.Join("..", "cli", "dquant_cli.exe") // now actually dquant_phrase_cli.exe
 	args := []string{
+		"--input_json", jsonPath,
+		"--song_json", filepath.Join("..", "cli", "song_context.json"),
 		"--output_id", id,
-		"--notes", req.NoteCount,
-		"--accent", req.Accent,
-		"--articulation", req.Articulation,
-		"--pitch", req.Pitch,
-		"--dyn_start", req.DynamicStart,
-		"--dyn_end", req.DynamicEnd,
 	}
 
 	fmt.Printf("Calling CLI: %s %v\n", cliPath, args)
-
 	cmd := exec.Command(cliPath, args...)
 	err = cmd.Run()
 	if err != nil {
