@@ -134,6 +134,15 @@ func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to copy MIDI to output folder: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+	
+	// Write dummy PNG for now
+	f, err := os.Create(imageFile)
+	if err == nil {
+		defer f.Close()
+		img := image.NewRGBA(image.Rect(0, 0, 1, 1))
+		img.Set(0, 0, color.RGBA{0, 0, 0, 0})
+		png.Encode(f, img)
+	}
 
 	// Wait up to 3 seconds for files to appear
 	timeout := time.After(3 * time.Second)
