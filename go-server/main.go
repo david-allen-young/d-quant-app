@@ -125,6 +125,8 @@ func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("[DEBUG] MIDI file exists:", midiFile)
 	}
 
+	// Copy generated MIDI to public output folder
+	finalMidiPath := filepath.Join("..", "output", id+".mid")
 	fmt.Println("[DEBUG] Copying to public output folder:", finalMidiPath)
 	err = copyFile(midiFile, finalMidiPath)
 	if err != nil {
@@ -132,16 +134,6 @@ func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to copy MIDI to output folder: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	
-	// Copy generated MIDI to public output folder
-	finalMidiPath := filepath.Join("..", "output", id+".mid")
-	err = copyFile(midiFile, finalMidiPath)
-	if err != nil {
-		http.Error(w, "Failed to copy MIDI to output folder: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 
 	// Wait up to 3 seconds for files to appear
 	timeout := time.After(3 * time.Second)
