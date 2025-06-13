@@ -10,6 +10,7 @@ import (
 	"os"
 	"log"
 	"path/filepath"
+	"strconv"
 )
 
 type GenerateNoteRequest struct {
