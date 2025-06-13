@@ -1,0 +1,8 @@
+{
+  "working_dir_cli": "out/",
+  "working_dir_tests": "tests/test_output/",
+  "dynamizer_training": "assets/training/dynamizer",
+  "dynamizer_generation": "assets/generation/dynamizer",
+  "rhythmizer_training": "assets/training/rhythmizer",
+  "rhythmizer_generation": "assets/generation/rhythmizer"
+}

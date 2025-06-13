@@ -1,5 +1,6 @@
 # Ignore generated output files
 /output/
+/go-server/out/
 *.mid
 *.png
 
