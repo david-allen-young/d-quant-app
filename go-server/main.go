@@ -45,7 +45,8 @@ func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req GenerateNoteRequest
-	err := json.NewDecoder(r.Body).Decode(&req)
+	var err error
+	err = json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
@@ -56,16 +57,18 @@ func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
 	imageFile := filepath.Join("..", "output", id+".png")
 	midiFile := filepath.Join("..", "output", id+".mid")
 
-	// Construct CLI args
-	cliPath := filepath.Join("..", "cli", "dquant_cli.exe")
-	
 	// Map numeric dynamic levels to string names
 	dynMark := map[string]string{"1": "pp", "2": "p", "3": "mp", "4": "mf", "5": "f", "6": "ff"}
 	dynStartStr := dynMark[req.DynamicStart]
 	dynEndStr := dynMark[req.DynamicEnd]
 
 	// Parse note count
-	noteCount, _ := strconv.Atoi(req.NoteCount)
+	var noteCount int
+	noteCount, err = strconv.Atoi(req.NoteCount)
+	if err != nil {
+		http.Error(w, "Invalid note count", http.StatusBadRequest)
+		return
+	}
 
 	// Build note list (same pitch repeated for now)
 	noteList := []map[string]interface{}{}
