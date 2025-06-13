@@ -118,6 +118,22 @@ func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
+	fmt.Println("[DEBUG] CLI finished, checking if output MIDI exists:", midiFile)
+	if _, err := os.Stat(midiFile); err != nil {
+		fmt.Println("[ERROR] MIDI file not found:", midiFile)
+	} else {
+		fmt.Println("[DEBUG] MIDI file exists:", midiFile)
+	}
+
+	fmt.Println("[DEBUG] Copying to public output folder:", finalMidiPath)
+	err = copyFile(midiFile, finalMidiPath)
+	if err != nil {
+		fmt.Println("[ERROR] Copy failed:", err)
+		http.Error(w, "Failed to copy MIDI to output folder: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	
 	// Copy generated MIDI to public output folder
 	finalMidiPath := filepath.Join("..", "output", id+".mid")
 	err = copyFile(midiFile, finalMidiPath)
@@ -146,6 +162,7 @@ func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
 			if !foundMidi {
 				if _, err := os.Stat(finalMidiPath); err == nil {
 					foundMidi = true
+					fmt.Println("[DEBUG] Found final MIDI output:", finalMidiPath)
 				}
 			}
 		}
