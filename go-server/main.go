@@ -144,7 +144,7 @@ func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 			if !foundMidi {
-				if _, err := os.Stat(midiFile); err == nil {
+				if _, err := os.Stat(finalMidiPath); err == nil {
 					foundMidi = true
 				}
 			}
