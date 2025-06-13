@@ -11,6 +11,9 @@ import (
 	"log"
 	"path/filepath"
 	"strconv"
+	"image"
+	"image/color"
+	"image/png"
 )
 
 type GenerateNoteRequest struct {
