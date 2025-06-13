@@ -55,7 +55,7 @@ func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
 	// Generate a unique ID
 	id := fmt.Sprintf("%d", rand.Intn(1e9))
 	imageFile := filepath.Join("..", "output", id+".png")
-	midiFile := filepath.Join("..", "output", id+".mid")
+	midiFile := filepath.Join("..", "go-server", "out", "midi", id+".mid")
 
 	// Map numeric dynamic levels to string names
 	dynMark := map[string]string{"1": "pp", "2": "p", "3": "mp", "4": "mf", "5": "f", "6": "ff"}
@@ -117,6 +117,15 @@ func generateNoteHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "CLI execution failed: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+	
+	// Copy generated MIDI to public output folder
+	finalMidiPath := filepath.Join("..", "output", id+".mid")
+	err = copyFile(midiFile, finalMidiPath)
+	if err != nil {
+		http.Error(w, "Failed to copy MIDI to output folder: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 
 	// Wait up to 3 seconds for files to appear
 	timeout := time.After(3 * time.Second)
@@ -162,4 +171,12 @@ func main() {
 
 	fmt.Println("Starting server at :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func copyFile(src, dst string) error {
+	input, err := os.ReadFile(src)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(dst, input, 0644)
 }
